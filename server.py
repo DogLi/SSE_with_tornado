@@ -1,22 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""748783Demonstration of server-sent events with Tornado. To see the
+"""Demonstration of server-sent events with Tornado. To see the
 stream, you can either point your browser to ``http://localhost:9000``
 or use ``curl`` like so::
   $ curl http://localhost:9000/events
 
-SSE 数据格式：
-    先发送event（可选）： 'event: event_name' + u'\n'
-    发送数据： u'data: encoded_data' + u'\n\n'
 """
-import redis
-import json
 import time
-import json
 import socket,os
-import logging
-import uuid
 import redis_util
 from module import SSEModule
 from tornado.options import options, define
@@ -60,7 +52,6 @@ html = """
 
 </script>"""
 
-switch = True
 CHANNEL = "sse"
 
 class SSEHandler(web.RequestHandler):
@@ -81,10 +72,6 @@ class SSEHandler(web.RequestHandler):
         )
         for name, value in SSE_HEADERS:
             self.set_header(name, value)
-
-    @property
-    def cls(self):
-        return self.__class__
 
     @property
     def is_alive(self):
@@ -108,6 +95,7 @@ class SSEHandler(web.RequestHandler):
 
 
     def on_connection_close(self):
+        # unsubscribe when close the connection
         self.sub_obj.unsubscribe()
         self.stream.close()
 
