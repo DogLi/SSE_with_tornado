@@ -5,9 +5,9 @@ import redis as Redis
 
 def get_pool(db=0):
     pool = Redis.ConnectionPool(
-        host="ubuntu",
+        host="localhost",
         port="6379",
-        password="cljslrl0620",
+        password=None,
         db=db)
 
     return pool
